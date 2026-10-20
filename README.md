@@ -1,5 +1,11 @@
 # agentgate (alpha)
 
+[![PyPI](https://img.shields.io/pypi/v/agentgate-security)](https://pypi.org/project/agentgate-security/) [![CI](https://github.com/Artificialxtrax/agentgate/actions/workflows/ci.yml/badge.svg)](https://github.com/Artificialxtrax/agentgate/actions) [![License: MIT](https://img.shields.io/badge/license-MIT-blue)](LICENSE)
+
+```
+pip install agentgate-security
+```
+
 Layered screening and **session-hijack resistance** for platforms that let operators run AI agents.
 Python 3.9+, one dependency (`cryptography`). It raises the cost of misuse and of account takeover.
 It does not make either impossible, and it is not legal advice.
