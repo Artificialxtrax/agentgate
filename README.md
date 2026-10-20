@@ -89,6 +89,28 @@ See `docs/DEPLOYMENT.md` for the production checklist.
   provided but has not run yet. Developed on Python 3.13; the full suite has passed on Python 3.9 (macOS) and 3.13 (Linux).
 - "What you see is what you sign": WebAuthn does not show the action on the key; use a trusted UI.
 
+## OWASP Top 10 for LLM Applications (2025) mapping
+
+agentgate sits **in front of** an agent (who is asking, and should this request run?). It does not inspect model
+internals, training data or model output. This is a self-assessment against the
+[2025 list](https://genai.owasp.org/llm-top-10/), not an OWASP endorsement or an independent review.
+
+| ID | Risk | Coverage | Where | Notes |
+|---|---|---|---|---|
+| LLM01 | Prompt Injection | Partial | `gate`, `llm_classifier` | Rules run on raw and Unicode-normalised text; the optional model classifier treats the request as data inside stripped `<request>` tags, and rules always run too. Only screens the operator's request, not indirect injection via documents/tools the agent reads later. |
+| LLM02 | Sensitive Information Disclosure | Partial | `transport` (`DestinationMonitor`), `tripwire`, `gate` | Holds output sent to a new destination, honey tokens flag leaked/used fake secrets, audit log stores keyed hashes not raw text. Does not scan model output for secrets or PII. |
+| LLM03 | Supply Chain | Out of scope | - | One dependency (`cryptography`); no model/package provenance checks. |
+| LLM04 | Data and Model Poisoning | Out of scope | - | No training or embedding data handled. (Behaviour baselines resist poisoning of *their own* state, which is a different thing.) |
+| LLM05 | Improper Output Handling | Out of scope | - | Model output is not validated or sanitised. |
+| LLM06 | Excessive Agency | Partial | `approval`, `webauthn`, `signing`, `gate` | Sensitive actions need a one-time, action-bound WebAuthn key approval; graded block/escalate/step-up; device-bound request signing. You must mark which actions are sensitive server-side; it does not limit tool permissions itself. |
+| LLM07 | System Prompt Leakage | Out of scope | - | |
+| LLM08 | Vector and Embedding Weaknesses | Out of scope | - | No RAG/vector store. |
+| LLM09 | Misinformation | Out of scope | - | The law KB grounding limits what the *classifier* may cite; it does not check agent answers. |
+| LLM10 | Unbounded Consumption | Partial | `behavior`, `_util` | Burst detection steps up rapid requesters; bounded LRU caches stop attackers growing monitor state. Not a rate limiter or token/cost budget. |
+
+Abuse via **stolen sessions** (the main thing agentgate targets) is not its own Top 10 entry; it overlaps
+LLM06 and general access control. Corrections welcome, see `REVIEW.md`.
+
 ## Privacy and legal notes
 
 - The audit log stores hashes, not raw text. IPs and devices use a **keyed** hash (key in `<log>.key`, mode 600,
