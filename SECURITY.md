@@ -4,7 +4,7 @@ agentgate is alpha software that defends other systems, so its own flaws matter.
 
 - **Report vulnerabilities privately** using GitHub's "Report a vulnerability" (private security advisory) on the
   repository, not a public issue. Include steps to reproduce and the version.
-  If you cannot use GitHub advisories, email: **[SECURITY CONTACT EMAIL: set before publishing]**.
+  If you cannot use GitHub advisories, email: **Artificialxtrax@outlook.com**.
 - Highest priority: anything that lets a request skip a block, forges or replays an approval, weakens the audit
   log, or leaks personal data.
 - The WebAuthn verifier (`webauthn.py`) and approval logic (`approval.py`, `signing.py`) were written for this
