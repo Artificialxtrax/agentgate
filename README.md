@@ -31,15 +31,16 @@ Responses are graded: **block**, **escalate to a human**, **step-up** (re-verify
 ## Install and try it
 
 ```bash
-pip install cryptography             # the only dependency
+pip install agentgate-security       # PyPI name (first release pending); the import is still `agentgate`
 python -m unittest discover -s tests -t .             # 145 tests
 PYTHONPATH=. python examples/quickstart.py            # every layer, including a WebAuthn registration and key tap
 PYTHONPATH=. python examples/webauthn_demo.py         # browser demo: open http://localhost:8765 and use your own key
 PYTHONPATH=. python -m agentgate redteam              # synthetic owners vs attackers
 ```
 
-(`pip install -e .` also works and gives you the `agent-gate` command; the `PYTHONPATH=.` prefix is for running
-straight from a checkout.)
+The package installs as `agentgate-security` but you import it as `agentgate`, and it gives you the `agent-gate`
+command. From a checkout, `pip install -e .` does the same; or `pip install cryptography` (the only dependency) and
+use the `PYTHONPATH=.` prefix shown above.
 
 CLI: `screen` · `verify-log` · `anchor` / `verify-anchors` · `backtest` · `calibrate` · `review` · `reinstate` ·
 `kb-status` / `kb-approve` · `redteam`.
@@ -84,9 +85,9 @@ See `docs/DEPLOYMENT.md` for the production checklist.
 - **Law knowledge base is unreviewed sample text**, excluded by default until a qualified human approves entries.
 - **Thresholds are guesses.** Run shadow mode and `agent-gate calibrate` on your own traffic.
 - **JA3 and GeoIP** are tested on a hand-built ClientHello and stubbed lookups; `maxmind_lookup` is untested.
-- `pip install .` could not be run end to end in the sandbox (broken system setuptools). `pyproject.toml` was
-  validated with setuptools' parser and an equivalent wheel installed and ran. CI (`.github/workflows/ci.yml`) is
-  provided but has not run yet. Developed on Python 3.13; the full suite has passed on Python 3.9 (macOS) and 3.13 (Linux).
+- CI (`.github/workflows/ci.yml`) installs the package with `pip install -e .` and runs the tests, the quickstart
+  and the red-team harness on Linux with Python 3.9, 3.10, 3.11, 3.12 and 3.13, and it passes. Developed on Python 3.13;
+  the full suite has also passed on Python 3.9 on macOS. CI is Linux-only.
 - "What you see is what you sign": WebAuthn does not show the action on the key; use a trusted UI.
 
 ## OWASP Top 10 for LLM Applications (2025) mapping
