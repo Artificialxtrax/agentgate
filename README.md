@@ -2,6 +2,8 @@
 
 [![PyPI](https://img.shields.io/pypi/v/agentgate-security)](https://pypi.org/project/agentgate-security/) [![CI](https://github.com/Artificialxtrax/agentgate/actions/workflows/ci.yml/badge.svg)](https://github.com/Artificialxtrax/agentgate/actions) [![License: MIT](https://img.shields.io/badge/license-MIT-blue)](LICENSE)
 
+**Website:** [artificialxtrax.github.io/agentgate](https://artificialxtrax.github.io/agentgate/)
+
 ```
 pip install agentgate-security
 ```
