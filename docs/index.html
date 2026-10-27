@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>agentgate: passkey-gated approval for AI agent actions</title>
+<meta name="description" content="agentgate is a passkey-gated approval layer for AI agent actions. A stolen agent session is useless without the owner's hardware key.">
+<style>
+:root{--bg:#0b0f17;--card:#131a26;--fg:#e6edf3;--mut:#9aa7b4;--acc:#4ade80;--line:#223047}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--fg);font:16px/1.6 system-ui,-apple-system,Segoe UI,Roboto,sans-serif}
+.wrap{max-width:860px;margin:0 auto;padding:0 20px}
+header{padding:72px 0 40px;text-align:center}
+h1{font-size:2.6rem;margin:0 0 12px}h1 span{color:var(--acc)}
+.tag{color:var(--mut);font-size:1.2rem;max-width:640px;margin:0 auto 28px}
+.btns a{display:inline-block;margin:6px;padding:10px 18px;border-radius:8px;border:1px solid var(--line);color:var(--fg);text-decoration:none}
+.btns a.p{background:var(--acc);color:#04130a;border-color:var(--acc);font-weight:600}
+section{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:24px 28px;margin:20px 0}
+h2{margin-top:0}pre{background:#070a10;border:1px solid var(--line);border-radius:8px;padding:14px;overflow-x:auto;font-size:.9rem}
+code{font-family:ui-monospace,SFMono-Regular,Menlo,monospace}
+ul{padding-left:20px}a{color:var(--acc)}.mut{color:var(--mut)}
+footer{text-align:center;color:var(--mut);padding:40px 0 60px;font-size:.9rem}
+</style>
+</head>
+<body>
+<header class="wrap">
+<h1><span>agent</span>gate</h1>
+<p class="tag">A passkey-gated approval layer for AI agent actions. Sensitive actions need a tap on the owner's hardware key, so a stolen agent session can't use them.</p>
+<pre style="display:inline-block;text-align:left">pip install agentgate-security</pre>
+<div class="btns">
+<a class="p" href="https://github.com/Artificialxtrax/agentgate">GitHub</a>
+<a href="https://pypi.org/project/agentgate-security/">PyPI</a>
+<a href="https://dev.to/artificialxtrax/why-i-built-agentgate-a-stolen-agent-session-is-worse-than-a-stolen-account-453g">Why I built it</a>
+</div>
+</header>
+<main class="wrap">
+<article>
+<section>
+<h2>Why it exists</h2>
+<p>Platforms that let people run AI agents have a new problem: steal an agent session and you inherit everything that agent can do. Tokens, cookies and device IDs can be stolen, and malware in the owner's browser can act as the owner. agentgate makes the high-impact actions, like exporting data or sending output somewhere new, need a WebAuthn signature that only the owner's physical key or passkey can produce.</p>
+</section>
+<section>
+<h2>What's in the box</h2>
+<ul>
+<li><b>WebAuthn key approval</b> of sensitive actions. It stops token thieves and in-browser malware.</li>
+<li><b>Content policy</b>: rules plus an optional model grounded in a human-vetted knowledge base.</li>
+<li><b>Behaviour baselines</b>: new device at an odd hour, bursts, probing, topic drift.</li>
+<li><b>Device-bound signatures</b>, <b>decoys and tripwires</b>, and <b>transport/ISP/geo fingerprints</b>.</li>
+<li><b>Hash-chained audit log</b> with external anchoring, so history can't be silently rewritten.</li>
+</ul>
+<p class="mut">Responses are graded: block, escalate to a human, step-up (re-verify), allow-and-log, or support. Python 3.9+, one dependency (<code>cryptography</code>). Status: alpha (v1.2.1), not yet independently reviewed.</p>
+</section>
+<section>
+<h2>Quick start</h2>
+<pre><code>pip install agentgate-security
+agent-gate redteam      # synthetic owners vs attackers</code></pre>
+<pre><code>from agentgate import Gate, BehaviorMonitor, ApprovalService, build_meta
+
+gate = Gate("audit.jsonl", "review.jsonl", monitor=BehaviorMonitor(),
+            approvals=ApprovalService(registry, rp_id="example.com",
+                                      origin="https://example.com", allow_simple=False))
+meta = build_meta(request_headers, device=device_id, ip=ip,
+                  sensitive_action="export:hooks.acme.com", destination=webhook_url)
+d = gate.screen(operator_id, text, meta=meta, approval=client_approval)
+if d.action == "STEP_UP" and d.challenge:
+    ...  # pass d.challenge["webauthn_challenge"] to navigator.credentials.get()</code></pre>
+<p>Full docs, tests and the deployment checklist are in the <a href="https://github.com/Artificialxtrax/agentgate">GitHub repo</a>.</p>
+</section>
+</article>
+<div data-aon-slot="end-of-content"></div>
+<section>
+<h2>Contact</h2>
+<p>Questions, reviews or security reports: <a href="mailto:Artificialxtrax@outlook.com">Artificialxtrax@outlook.com</a></p>
+</section>
+</main>
+<footer>© 2026 ArtificialXtrax Technologies · MIT License</footer>
+<script
+  src="https://plugin.aon.pro/aon.js"
+  data-placement-id="plc_lTBs9UhtAX3Xso1e"
+  data-lang="en"
+  referrerpolicy="origin"
+  async
+></script>
+</body>
+</html>
